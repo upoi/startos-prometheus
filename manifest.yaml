@@ -1,0 +1,101 @@
+id: prometheus
+title: "Prometheus"
+version: 0.1.0.0
+release-notes: "Initial release — Prometheus time-series database for StartOS."
+license: Apache-2.0
+wrapper-repo: "https://github.com/upoi/startos-prometheus"
+upstream-repo: "https://github.com/prometheus/prometheus"
+support-site: "https://prometheus.io/docs/"
+marketing-site: "https://prometheus.io/"
+build: ["make"]
+description:
+  short: Time-series monitoring database
+  long: |
+    Prometheus collects and stores time-series metrics from targets across
+    your network. It provides a powerful query language (PromQL) and a
+    built-in web UI for exploring data. Configure scrape targets directly
+    from the StartOS config page.
+assets:
+  license: LICENSE
+  icon: icon.png
+  instructions: instructions.md
+hardware-requirements:
+  arch:
+    - x86_64
+    - aarch64
+main:
+  type: docker
+  image: main
+  entrypoint: "sh"
+  args: ["-c", "/docker_entrypoint.sh"]
+  user: root
+  mounts:
+    main: /prometheus/data
+  gpu-acceleration: false
+health-checks:
+  web-ui:
+    name: "Web UI"
+    success-message: Prometheus is accessible
+    type: script
+config:
+  get:
+    type: script
+  set:
+    type: script
+properties:
+  type: script
+volumes:
+  main:
+    type: data
+interfaces:
+  main:
+    name: Prometheus UI
+    description: Prometheus web interface and API
+    tor-config:
+      port-mapping:
+        80: "9090"
+    lan-config:
+      443:
+        ssl: true
+        internal: 9090
+    ui: true
+    protocols:
+      - tcp
+      - http
+dependencies: {}
+backup:
+  create:
+    type: docker
+    image: compat
+    system: true
+    entrypoint: compat
+    args:
+      - duplicity
+      - create
+      - /mnt/backup
+      - /prometheus/data
+    mounts:
+      BACKUP: "/mnt/backup"
+      main: "/prometheus/data"
+  restore:
+    type: docker
+    image: compat
+    system: true
+    entrypoint: compat
+    args:
+      - duplicity
+      - restore
+      - /mnt/backup
+      - /prometheus/data
+    mounts:
+      BACKUP: "/mnt/backup"
+      main: "/prometheus/data"
+migrations:
+  from:
+    "*":
+      type: script
+      args: ["from"]
+  to:
+    "*":
+      type: script
+      args: ["to"]
