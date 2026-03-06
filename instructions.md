@@ -40,7 +40,7 @@ For Prometheus to successfully scrape metrics from your servers (e.g., your Rasp
 
 1. **Metrics Exporter**: The target server must be running a compatible exporter (e.g., `node_exporter` for CPU/RAM/Disk metrics).
 2. **Network Access**: Prometheus (running on StartOS) must be able to reach the target's IP address. If the target is not on your local area network, connect both devices securely using a mesh VPN like **Tailscale**.
-3. **Firewall Rules**: The target's firewall (like `ufw` or `iptables`) must allow inbound TCP connections on the exporter's port (e.g., port `9100`) from your StartOS Tailscale/LAN IP.
+3. **Firewall Rules**: The target's firewall (like `ufw` or `iptables`) must allow inbound TCP connections on the exporter's port (e.g., port `9100`) from your StartOS LAN IP.
 4. **Endpoint**: The exporter must serve metrics via HTTP at the configured path (`/metrics` by default).
 
 ## Data Persistence
