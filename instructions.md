@@ -34,6 +34,15 @@ A **self-monitoring job** (`localhost:9090`) is always included automatically.
 
 In the Prometheus UI, navigate to **Status → Targets** to confirm all targets are being scraped successfully.
 
+## Scrape Target Requirements
+
+For Prometheus to successfully scrape metrics from your servers (e.g., your Raspberry Pi or GPU server), the target machines must meet these requirements:
+
+1. **Metrics Exporter**: The target server must be running a compatible exporter (e.g., `node_exporter` for CPU/RAM/Disk metrics).
+2. **Network Access**: Prometheus (running on StartOS) must be able to reach the target's IP address. If the target is not on your local area network, connect both devices securely using a mesh VPN like **Tailscale**.
+3. **Firewall Rules**: The target's firewall (like `ufw` or `iptables`) must allow inbound TCP connections on the exporter's port (e.g., port `9100`) from your StartOS Tailscale/LAN IP.
+4. **Endpoint**: The exporter must serve metrics via HTTP at the configured path (`/metrics` by default).
+
 ## Data Persistence
 
 All time-series data is stored on a persistent volume. Data survives service restarts and can be backed up / restored through the StartOS dashboard.
