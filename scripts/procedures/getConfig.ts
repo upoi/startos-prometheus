@@ -61,6 +61,15 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
                     placeholder: "/metrics",
                     default: "/metrics",
                 },
+                "instance-name": {
+                    type: "string",
+                    name: "Instance Name",
+                    description:
+                        "An optional friendly name for this target. Overrides the default instance label (IP:port).",
+                    nullable: true,
+                    placeholder: "pi-home",
+                    default: "",
+                },
             },
             "unique-by": "job-name",
             "display-as": "{{job-name}} ({{host}}:{{port}})",

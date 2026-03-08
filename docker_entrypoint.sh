@@ -38,6 +38,7 @@ if [ -f "$CONFIG_FILE" ]; then
       HOST=$(yq e ".scrape-targets[$i].host" "$CONFIG_FILE")
       PORT=$(yq e ".scrape-targets[$i].port" "$CONFIG_FILE")
       METRICS_PATH=$(yq e ".scrape-targets[$i].metrics-path // \"/metrics\"" "$CONFIG_FILE")
+      INSTANCE_NAME=$(yq e ".scrape-targets[$i].instance-name // \"\"" "$CONFIG_FILE")
 
       cat >> "$PROM_CONFIG" <<EOF
 
@@ -46,6 +47,13 @@ if [ -f "$CONFIG_FILE" ]; then
     static_configs:
       - targets: ["${HOST}:${PORT}"]
 EOF
+
+      if [ -n "$INSTANCE_NAME" ] && [ "$INSTANCE_NAME" != "null" ]; then
+        cat >> "$PROM_CONFIG" <<EOF
+        labels:
+          instance: "${INSTANCE_NAME}"
+EOF
+      fi
       i=$((i + 1))
     done
   fi
